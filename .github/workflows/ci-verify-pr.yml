@@ -1,0 +1,128 @@
+name: Verify Pull Request
+
+on: pull_request
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  # JOB to run change detection
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+      mock-monobank-api: ${{ steps.filter.outputs.mock-monobank-api}}
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dorny/paths-filter@v2
+      id: filter
+      with:
+        filters: |
+          backend:
+            - 'packages/backend/**'
+          frontend:
+            - 'packages/frontend/**'
+          mock-monobank-api:
+            - 'packages/mock-monobank-api/**'
+
+  # JOB to build and test backend code
+  backend:
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install:backend
+
+      - name: Linter checks
+        run: yarn lint:backend
+
+      - name: Run tests
+        run: yarn test:backend:coverage
+
+      # - name: Code Coverage Summary Report
+      #   uses: irongut/CodeCoverageSummary@v1.3.0
+      #   with:
+      #     filename: packages/backend/coverage/cobertura-coverage.xml
+      #     badge: true
+      #     format: markdown
+      #     output: file
+
+      # - name: Add comment header
+      #   run: "sed -i '1i ## Backend coverage\n' code-coverage-results.md"
+
+      # - name: Add Coverage PR Comment
+      #   uses: marocchino/sticky-pull-request-comment@v2
+      #   if: github.event_name == 'pull_request'
+      #   with:
+      #     header: backend_coverage
+      #     recreate: true
+      #     path: code-coverage-results.md
+
+      - name: Build
+        run: yarn build:backend
+
+  # JOB to build and test frontend code
+  frontend:
+    needs: changes
+    if: ${{ needs.changes.outputs.frontend == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install:frontend
+
+      - name: Linter checks
+        run: yarn lint:frontend
+
+      - name: Run tests
+        run: yarn test:frontend:coverage
+
+      # - name: Code Coverage Summary Report
+      #   uses: irongut/CodeCoverageSummary@v1.3.0
+      #   with:
+      #     filename: packages/frontend/coverage/cobertura-coverage.xml
+      #     badge: true
+      #     format: markdown
+      #     output: file
+
+      # - name: Add comment header
+      #   run: "sed -i '1i ## Frontend coverage\n' code-coverage-results.md"
+
+      # - name: Add Coverage PR Comment
+      #   uses: marocchino/sticky-pull-request-comment@v2
+      #   if: github.event_name == 'pull_request'
+      #   with:
+      #     header: frontend_coverage
+      #     recreate: true
+      #     path: code-coverage-results.md
+
+      - name: Build
+        run: yarn build:frontend
+
+  # JOB to lint mock-monobank-api code
+  mock-monobank-api:
+    needs: changes
+    if: ${{ needs.changes.outputs.mock-monobank-api == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: yarn install:mock-monobank-api
+
+      - name: Linter checks
+        run: yarn lint:mock-monobank-api
+
+  pr_verified:
+    name: Pull request verified
+    needs: [frontend, backend, mock-monobank-api]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Successful pr
+        run: echo Successful pr

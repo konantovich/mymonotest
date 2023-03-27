@@ -1,0 +1,66 @@
+{
+  "name": "frontend",
+  "version": "0.1.1",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@emotion/react": "^11.9.0",
+    "@emotion/styled": "^11.8.1",
+    "@hookform/resolvers": "^2.8.10",
+    "@mui/icons-material": "^5.8.2",
+    "@mui/material": "^5.8.2",
+    "@mui/x-data-grid": "^5.17.2",
+    "@testing-library/jest-dom": "^5.14.1",
+    "@testing-library/react": "^13.0.0",
+    "@testing-library/user-event": "^13.2.1",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.13",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "@vitejs/plugin-react": "^3.1.0",
+    "axios": "^0.27.2",
+    "date-fns": "^2.29.3",
+    "jwt-decode": "^3.1.2",
+    "moment": "^2.29.4",
+    "react": "^18.1.0",
+    "react-dates": "^21.8.0",
+    "react-dom": "^18.1.0",
+    "react-hook-form": "^7.31.3",
+    "react-router-dom": "^6.3.0",
+    "react-scripts": "5.0.1",
+    "typescript": "^4.4.2",
+    "use-debounce": "^8.0.4",
+    "vite": "^4.2.1",
+    "web-vitals": "^2.1.0",
+    "yup": "^0.32.11"
+  },
+  "scripts": {
+    "start": "vite --host",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "start:proxy": "node src/setupProxy.js && yarn start",
+    "test:coverage": "react-scripts test --coverage --watchAll=false",
+    "deploy:development": "firebase deploy --only hosting:development",
+    "deploy:staging": "firebase deploy --only hosting:staging",
+    "deploy:production": "firebase deploy --only hosting:production",
+    "lint": "eslint --fix '*.cjs' './src/**/*.ts*'",
+    "eject": "react-scripts eject",
+    "ts-coverage": "typescript-coverage-report"
+  },
+  "prettier": {
+    "trailingComma": "all",
+    "singleQuote": true,
+    "printWidth": 100
+  },
+  
+  "devDependencies": {
+    "@types/react-dates": "^21.8.3",
+    "@typescript-eslint/eslint-plugin": "^5.23.0",
+    "@typescript-eslint/parser": "^5.23.0",
+    "eslint": "^8.15.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "eslint-plugin-react": "^7.29.4",
+    "prettier": "2.6.2"
+  }
+}
